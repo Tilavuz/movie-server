@@ -10,7 +10,7 @@ const getSomeMovies = async (req, res) => {
       .sort({ createAt: -1 })
       .skip(skip)
       .limit(count);
-    res.json({ data: movies });
+    res.json(movies);
   } catch (error) {
     console.error(error);
     res.json({ message: error.message });
@@ -160,7 +160,11 @@ const changeMovie = async (req, res) => {
 
       if (req.files.big_photo) {
         if (movie.big_photo && movie.big_photo !== "movie-default-image.png") {
-          const oldBig_photoPath = path.join(__dirname, "../uploads", movie.big_photo);
+          const oldBig_photoPath = path.join(
+            __dirname,
+            "../uploads",
+            movie.big_photo
+          );
           removeFile(oldBig_photoPath);
         }
         movie.big_photo = req.files.big_photo[0].filename;
@@ -203,7 +207,7 @@ const changeMovie = async (req, res) => {
       movie: updatedMovie,
     });
   } catch (error) {
-    console.error('Xato:', error);
+    console.error("Xato:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -229,13 +233,11 @@ const getMovies = async (req, res) => {
     const total = await Movie.countDocuments({});
 
     res.json({
-      data: {
-        data: movies,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-        totalMovies: total,
-        moviesPerPage: limit,
-      },
+      data: movies,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalMovies: total,
+      moviesPerPage: limit,
     });
   } catch (error) {
     console.error(error);

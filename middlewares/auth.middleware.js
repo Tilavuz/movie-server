@@ -3,7 +3,8 @@ const { jwtDecoded } = require("../helpers/shared");
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const token = req.header('Authorization');
+    
     if (!token) {
       return res.status(401).json({
         message: "Syatdan to'liq foydalanish uchun ro'yhatdan o'ting",

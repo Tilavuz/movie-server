@@ -22,8 +22,7 @@ const login = async (req, res) => {
 
     const token = generateToken({ _id: user._id });
 
-    res.cookie('token', token, { httpOnly: true, secure: true });
-    res.json({ user });
+    res.json({ user, token });
   } catch (error) {
     res.status(500).json(error.message);
   }
@@ -40,30 +39,31 @@ const register = async (req, res) => {
 
     let user = await User.findOne({ username });
 
-    if(user) {
-      return res.status(400).json({ message: "username allaqachon mavjut. Almashtiring!" })
+    if (user) {
+      return res
+        .status(400)
+        .json({ message: "username allaqachon mavjut. Almashtiring!" });
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = await User.create({ username, password: hashedPassword })
+    user = await User.create({ username, password: hashedPassword });
 
-    res.cookie('token', token, { httpOnly: true, secure: true });
-    res.json({ user });
+    res.json({ user, token });
   } catch (error) {
-    res.json({ message: error.message })
+    res.json({ message: error.message });
   }
-}
+};
 
 const getUser = async (req, res) => {
   try {
-    const { _id } = req.user
-    const user = await User.findById(_id).select('-password')
-    res.json(user)
+    const { _id } = req.user;
+    const user = await User.findById(_id).select("-password");
+    res.json(user);
   } catch (error) {
-    res.json({ message: error.message })
+    res.json({ message: error.message });
   }
-}
+};
 
 module.exports = { login, register, getUser };
