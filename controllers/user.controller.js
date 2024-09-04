@@ -22,7 +22,8 @@ const login = async (req, res) => {
 
     const token = generateToken({ _id: user._id });
 
-    res.json({ token, user });
+    res.cookie('token', token, { httpOnly: true, secure: true });
+    res.json({ user });
   } catch (error) {
     res.status(500).json(error.message);
   }
@@ -48,8 +49,8 @@ const register = async (req, res) => {
 
     user = await User.create({ username, password: hashedPassword })
 
-    const token = generateToken({ _id: user._id });
-    res.json({ token, user });
+    res.cookie('token', token, { httpOnly: true, secure: true });
+    res.json({ user });
   } catch (error) {
     res.json({ message: error.message })
   }
@@ -57,11 +58,12 @@ const register = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
-    res.status(200).json(user);
+    const { _id } = req.user
+    const user = await User.findById(_id).select('-password')
+    res.json(user)
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json({ message: error.message })
   }
-};
+}
 
-module.exports = { login, getUser, register };
+module.exports = { login, register, getUser };

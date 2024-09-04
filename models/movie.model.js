@@ -37,6 +37,10 @@ const movieSchema = new Schema({
     type: String,
     default: 'movie-default-image.png'
   },
+  big_photo: {
+    type: String,
+    default: 'movie-default-image.png'
+  },
   video: {
     type: String,
     required: true

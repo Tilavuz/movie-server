@@ -5,11 +5,13 @@ const app = express();
 const cors = require('cors')
 const { connect } = require("./db/connect");
 connect();
+const cookieParser = require('cookie-parser');
 
 // Middlewares
 app.use(express.json())
 app.use(cors())
 app.use("/uploads", express.static("uploads"));
+app.use(cookieParser());
 
 // Router
 const router = require('./routers/root.router')
